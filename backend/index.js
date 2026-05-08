@@ -2,6 +2,7 @@ const express = require("express");
 const {PORT} = require("./example.env");
 const {connectdb} = require("./database/db");
 const {redisClient} = require("./config/redis");
+const { connectRabbitMQ } = require("./config/rabbitmq");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -29,8 +30,8 @@ app.use((req, res) => {
 
 const startServer = async () => {
     try {
-        await connectdb(); 
-        
+        await connectdb();  
+        await connectRabbitMQ();
         if(!PORT) {
             throw new Error("❌ PORT is not provided to start a server. ❌");
         }
