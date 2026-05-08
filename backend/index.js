@@ -1,6 +1,7 @@
 const express = require("express");
-const {PORT} = require("./example.env")
+const {PORT} = require("./example.env");
 const {connectdb} = require("./database/db");
+const {redisClient} = require("./config/redis");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -28,7 +29,7 @@ app.use((req, res) => {
 
 const startServer = async () => {
     try {
-        await connectdb();
+        await connectdb(); 
         
         if(!PORT) {
             throw new Error("❌ PORT is not provided to start a server. ❌");
@@ -47,6 +48,8 @@ const startServer = async () => {
             const mongoose = require("mongoose");
             await mongoose.connection.close();
 
+            await redisClient.quit();
+            console.log("Redis disconnected");
             process.exit(0);
         });
     }catch(error) {
