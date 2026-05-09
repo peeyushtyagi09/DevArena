@@ -1,94 +1,108 @@
-# DevArena Backend
+# DevArena
 
-This repository contains the backend services for the DevArena project, built with Node.js and Express.js. It provides a simple API endpoint and is configured to handle environment variables and CORS.
+Node.js backend service for authentication-focused APIs, backed by MongoDB and integrated with RabbitMQ and Redis.
 
-## Table of Contents
+## Current Scope
 
-- [Features](#features)
-- [Technologies Used](#technologies-used)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Environment Variables](#environment-variables)
-- [Running the Application](#running-the-application)
-- [API Endpoints](#api-endpoints)
-- [Project Structure](#project-structure)
+This repository currently contains a backend app under `backend/` with:
 
-## Features
+- Express server with security and logging middleware (`helmet`, `cors`, `morgan`)
+- MongoDB connection via Mongoose
+- RabbitMQ connection bootstrap
+- Redis client configuration
+- User model with password hashing (`bcrypt`)
+- Joi-based validation schemas for auth payloads
 
--   **Express.js Server**: A robust and scalable web server.
--   **CORS Enabled**: Configured to handle Cross-Origin Resource Sharing.
--   **Environment Variable Management**: Uses `dotenv` for secure configuration.
+## Tech Stack
 
-## Technologies Used
-
--   **Node.js**: JavaScript runtime environment.
--   **Express.js**: Web framework for Node.js.
--   **CORS**: Node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
--   **dotenv**: Module to load environment variables from a `.env` file.
-
-## Getting Started
-
-Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
-
-### Prerequisites
-
-Make sure you have Node.js installed on your system.
--   Node.js (LTS version recommended)
-
-### Installation
-
-1.  **Clone the repository:**
-    ```bash
-    git clone <repository_url>
-    cd DevArena/backend # Assuming this is where your backend code resides
-    ```
-2.  **Install NPM packages:**
-    ```bash
-    npm install
-    ```
-
-## Environment Variables
-
-This project uses environment variables for configuration. You need to create a `.env` file in the `backend` directory.
-
-Create a file named `.env` in `c:\Users\peeyu\OneDrive\Desktop\DevArena\backend\` with the following content:
-
-```
-PORT=3000
-```
-
-**Note**: The `example.env.js` file demonstrates how environment variables are loaded and used. Do not commit your actual `.env` file to version control.
-
-## Running the Application
-
-To start the backend server, navigate to the `backend` directory and run:
-
-```bash
-npm start # Or node index.js
-```
-
-The server will start on the port specified in your `.env` file (defaulting to 3000 if not specified or if `example.env.js` is used directly). You should see a message in your console: `🙌 Server is running on port:🙌 3000`.
-
-## API Endpoints
-
-### `GET /`
-
--   **Description**: A simple test endpoint to check if the server is running.
--   **Response**: `he he he`
--   **Example Request**:
-    ```
-    GET http://localhost:3000/
-    ```
+- Node.js
+- Express
+- MongoDB + Mongoose
+- RabbitMQ (`amqplib`)
+- Redis (`ioredis`)
+- Joi
+- bcrypt
+- dotenv
 
 ## Project Structure
 
-```
+```text
 DevArena/
 ├── backend/
+│   ├── config/
+│   │   ├── rabbitmq.js
+│   │   └── redis.js
+│   ├── controllers/
+│   │   └── auth.controller.js
+│   ├── database/
+│   │   └── db.js
+│   ├── models/
+│   │   ├── User.js
+│   │   └── auth_flow.png
+│   ├── validation/
+│   │   └── auth.validation.js
 │   ├── example.env.js
 │   ├── index.js
 │   └── package.json
-│   └── .env (you will create this file)
-└── README.md
+└── Readme.md
 ```
+
+## Prerequisites
+
+- Node.js 18+ recommended
+- MongoDB running locally or reachable remotely
+- RabbitMQ running on `amqp://127.0.0.1:5672`
+- Redis running on `127.0.0.1:6379`
+
+## Setup
+
+1. Install backend dependencies:
+
+   ```bash
+   cd backend
+   npm install
+   ```
+
+2. Create `backend/.env` with:
+
+   ```env
+   PORT=3000
+   MONGODB_URI=mongodb://127.0.0.1:27017/devarena
+   mongoDb_uri=mongodb://127.0.0.1:27017/devarena
+   ```
+
+   Note: The current code checks `MONGODB_URI` and also reads `mongoDb_uri`, so both are needed in the current implementation.
+
+## Run
+
+From `backend/`:
+
+```bash
+node index.js
+```
+
+Expected startup behavior:
+
+- Connects to MongoDB
+- Connects to RabbitMQ
+- Starts HTTP server on `PORT`
+
+## Available Endpoint
+
+### `GET /`
+
+Health-style endpoint to verify API availability.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "message": "Api is running"
+}
+```
+
+## Notes
+
+- `controllers/auth.controller.js` appears incomplete in the current codebase and may require implementation before auth routes are enabled.
+- `package.json` currently does not define scripts (`start`, `dev`, etc.), so use `node index.js` to run the service.
