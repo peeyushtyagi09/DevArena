@@ -9,9 +9,11 @@ requireEnv.forEach((key) => {
 });
 
 const PORT = process.env.PORT;
-const mongoDb = process.env.mongoDb_uri
+const mongoDb = process.env.mongoDb_uri;
+const salt_value = process.env.salt_value;
 
 module.exports = {
     PORT, 
-    mongoDb
+    mongoDb, 
+    salt_value
 };

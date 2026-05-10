@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const {salt_value} = require("../example.env");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new mongoose.Schema(
@@ -53,7 +54,7 @@ userSchema.index({ email: 1 }, { unique: true });
 userSchema.pre("save", async function (next) {
   try {
     if (!this.isModified("password")) return next();
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(salt_value);
     this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (err) {
