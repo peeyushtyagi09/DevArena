@@ -3,6 +3,7 @@ const {PORT} = require("./example.env");
 const {connectdb} = require("./database/db");
 const {redisClient} = require("./config/redis");
 const { connectRabbitMQ } = require("./config/rabbitmq");
+const errorMiddleware = require("./middlewares/error.middleware");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
@@ -12,6 +13,8 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan("combined"));
+
+app.use(errorMiddleware);
 
 app.get("/", (req, res) => {
     res.status(200).json({
