@@ -1,0 +1,5 @@
+what is teh work of that folder 
+
+Repository Responsibilities
+
+This layer should ONLY talk to MongoDB.
